@@ -4,6 +4,7 @@ import style from './Client.module.scss'
 import FormMess from "../components/formmess/FormMess";
 import MessLine from "../components/message/MessLine";
 import '../assets/styles/index.scss'
+import Slider from "../components/slider/Slider";
 const socket = io('http://localhost:5000');
 
 const Client = () => {
@@ -31,7 +32,9 @@ const Client = () => {
                 <div className={style.logo}>graff.test</div>
             </div>
             <div className={style.workpage}>
-                <div className={style.sliderpath}></div>
+                <div className={style.sliderpath}>
+                    <Slider />
+                </div>
                 <div className={style.chatpath}>
                     <div className={style.chatpath_title}>Чат с поддержкой</div>
                     <div className={style.chatpath_listmess}>

@@ -26,10 +26,13 @@ const Client = () => {
 
     const [messinput, setMessInput] = useState('')
 
+
+
+
     return (
         <div className={style.main}>
             <div className={style.header}>
-                <div className={style.logo}>graff.test</div>
+                <div className={style.logo}>graff.test </div>
             </div>
             <div className={style.workpage}>
                 <div className={style.sliderpath}>

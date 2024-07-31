@@ -1,30 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import style from './SliderStyle.module.scss'
 import {useRef} from "react";
+import {logDOM} from "@testing-library/react";
+
 
 const Slider = () => {
-    // const initialImgs = [
-    //     '/images/slider/2.png',
-    //     '/images/slider/3.png',
-    //     '/images/slider/4.png',
-    //     '/images/slider/5.png',
-    //     '/images/slider/6.png',
-    //     '/images/slider/7.png',
-    //     '/images/slider/8.png'
-    // ];
-
-    const [imgslist, setImgslist] = useState([]); // Triple the initial images
-    const [next, setNext] = useState(imgslist.length); // Start from the middle set of images
+    const [imgslist, setImgslist] = useState([]); // Состояние для списка изображений
+    const [next, setNext] = useState(0); // Индекс текущего изображения
     const sliderRef = useRef(null);
 
     useEffect(() => {
-        fetch('/api/images')
-            .then(response => response.json())
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/api/images`)
+            .then(response => {
+                console.log(response)
+                if (!response.ok) {
+                    throw new Error('Network response was not ok ' + response.statusText);
+                }
+                return response.json();
+            })
             .then(data => {
-                setImgslist(data);
+                console.log('Fetched images:', data); // Лог для отладки
+                setImgslist(data.images); // Устанавливаем состояние с массивом изображений
             })
             .catch(error => console.error('Error fetching images:', error));
-        console.log(imgslist)
     }, []);
 
     const centerImage = (index) => {
@@ -41,13 +39,12 @@ const Slider = () => {
     };
 
     const updateImages = (direction) => {
+        const newlist = [...imgslist];
         if (direction === 'left') {
-            const newlist = [...imgslist];
             const lastElement = newlist.pop();
             newlist.unshift(lastElement);
             setImgslist(newlist);
         } else if (direction === 'right') {
-            const newlist = [...imgslist];
             const firstElement = newlist.shift();
             newlist.push(firstElement);
             setImgslist(newlist);
@@ -57,7 +54,7 @@ const Slider = () => {
     const leftTap = () => {
         if (next === 0) {
             updateImages('left');
-            setNext(imgslist.length); // Reset to middle set
+            setNext(imgslist.length - 1); // Сброс до конца списка
         } else {
             setNext(prev => prev - 1);
         }
@@ -66,16 +63,30 @@ const Slider = () => {
     const rightTap = () => {
         if (next === imgslist.length - 1) {
             updateImages('right');
-            setNext(imgslist.length - 1); // Reset to middle set
+            setNext(0); // Сброс до начала списка
         } else {
             setNext(prev => prev + 1);
         }
+    };
+    const handleFileUpload = (event) => {
+        const formData = new FormData();
+        formData.append('image', event.target.files[0]);
+
+        fetch(`${process.env.REACT_APP_API_BASE_URL}/api/upload`, {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                // Update the image list after a new image is uploaded
+                setImgslist(prevList => [...prevList, data.filePath]);
+            })
+            .catch(error => console.error('Error uploading image:', error));
     };
 
     useEffect(() => {
         centerImage(next);
     }, [next, imgslist]);
-
     return (
         <div className={style.slider}>
             <div className={style.scrollbar} id='slider' ref={sliderRef}>
@@ -86,6 +97,9 @@ const Slider = () => {
             <div className={style.buttons}>
                 <div className={style.btn} onClick={leftTap}>
                     <img src='/images/systems/left.svg' />
+                </div>
+                <div className={style.upload}>
+                    <input type="file" onChange={handleFileUpload} />
                 </div>
                 <div className={style.btn} onClick={rightTap}>
                     <img src='/images/systems/right.svg' />

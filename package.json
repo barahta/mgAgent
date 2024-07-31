@@ -1,0 +1,28 @@
+{
+  "name": "mgagent",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "client": "npm start --prefix client",
+    "server": "node index.js",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/barahta/mgAgent.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/barahta/mgAgent/issues"
+  },
+  "homepage": "https://github.com/barahta/mgAgent#readme",
+  "dependencies": {
+    "concurrently": "^8.2.2",
+    "express": "^4.19.2",
+    "socket.io": "^4.7.5"
+  }
+}

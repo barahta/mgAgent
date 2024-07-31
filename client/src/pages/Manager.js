@@ -20,20 +20,20 @@ const Manager = () => {
 
     return (
         <div>
-            <h1>Manager Page</h1>
-            <div>
-                <input
-                    type="text"
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                />
-                <button onClick={sendMessage}>Send</button>
-            </div>
-            <div>
-                {messages.map((msg, index) => (
-                    <div key={index}>{msg}</div>
-                ))}
-            </div>
+            {/*<h1>Manager Page</h1>*/}
+            {/*<div>*/}
+            {/*    <input*/}
+            {/*        type="text"*/}
+            {/*        value={message}*/}
+            {/*        onChange={(e) => setMessage(e.target.value)}*/}
+            {/*    />*/}
+            {/*    <button onClick={sendMessage}>Send</button>*/}
+            {/*</div>*/}
+            {/*<div>*/}
+            {/*    {messages.map((msg, index) => (*/}
+            {/*        <div key={index}>{msg}</div>*/}
+            {/*    ))}*/}
+            {/*</div>*/}
         </div>
     );
 };

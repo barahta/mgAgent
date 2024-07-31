@@ -1,0 +1,59 @@
+.main{
+  width: 100%;
+  height: 100%;
+  .header{
+    width: calc(100% - 80px);
+    height: 64px;
+    padding: 0 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid #EBECF2;
+    .logo{
+      font-size: 24px;
+      font-weight: 600;
+    }
+  }
+
+  .workpage{
+    width: 100%;
+    height: calc(100vh - 64px - 1px);
+    display: flex;
+    justify-content: space-between;
+    .sliderpath{
+      width: calc(100% - 360px - 1px);
+      height: 100%;
+      border-right: 1px solid #EBECF2;
+    }
+    .chatpath{
+      width: 360px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      background-color: #F1F3F5;
+      .chatpath_title{
+        width: calc(100% - 32px);
+        height: calc(56px - 32px - 1px);
+        background-color: #FFFFFF;
+        padding: 16px;
+        border-bottom: 1px solid #EBECF2;
+        font-size: 20px;
+        font-weight: 600;
+      }
+      .chatpath_listmess{
+        width: 100%;
+        height: calc(100% - 56px - 48px - 24px);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 12px 0;
+        overflow: clip;
+      }
+
+    }
+  }
+
+}

@@ -1,0 +1,21 @@
+.chatpath_form{
+  width: calc(100% - 28px);
+  height: calc(48px - 24px);
+  background-color: #FFFFFF;
+  padding: 12px 12px 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  .chatpath_form_input{
+    width: 296px;
+    height: 20px;
+    border: none;
+    font-size: 14px;
+    outline: none;
+  }
+  .chatpath_form_send{
+    width: 24px;
+    height: 24px;
+    background-size: cover;
+    background-position: center center;
+  }
+}

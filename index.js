@@ -2,7 +2,7 @@ const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
 const path = require('path');
-
+const fs = require('fs');
 const app = express();
 const server = http.createServer(app);
 const io = socketIo(server, {
@@ -10,6 +10,21 @@ const io = socketIo(server, {
         origin: "http://localhost:3000", // указать ваш порт клиента
         methods: ["GET", "POST"]
     }
+});
+
+app.use(express.static(path.join(__dirname, 'client', 'public')));
+
+app.get('/api/images', (req, res) => {
+    const imagesDir = path.join(__dirname, 'client', 'public', 'images', 'slider');
+
+    fs.readdir(imagesDir, (err, files) => {
+        if (err) {
+            return res.status(500).json({ error: 'Unable to scan directory' });
+        }
+
+        const imagePaths = files.map(file => `/images/slider/${file}`);
+        res.json(imagePaths);
+    });
 });
 
 app.use(express.json());

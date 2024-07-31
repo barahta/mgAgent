@@ -6,9 +6,16 @@
     position: absolute;
     width: 100%;
     height: 100%;
-    background-color: #B9D7FB;
     top: 0px;
     left: 0px;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    display: flex;
+    justify-content: flex-start;
+    img{
+      height: 100%;
+      margin: 0 2px;
+    }
   }
   .buttons{
     position: absolute;

@@ -5,34 +5,75 @@ import FormMess from "../components/formmess/FormMess";
 import MessLine from "../components/message/MessLine";
 import '../assets/styles/index.scss'
 import Slider from "../components/slider/Slider";
+import FirstEnter from "../components/firstenter/FirstEnter";
 const socket = io('http://localhost:5000');
 
 const Client = () => {
-    // const [message, setMessage] = useState('');
-    // const [messages, setMessages] = useState([]);
-    //
-    // useEffect(() => {
-    //     socket.on('message', (message) => {
-    //         setMessages((prevMessages) => [...prevMessages, message]);
-    //     });
-    // }, []);
-    //
-    // const sendMessage = () => {
-    //     socket.emit('message', message);
-    //     setMessage('');
-    // };
+    const [message, setMessage] = useState('');
+    const [messages, setMessages] = useState([]);
+    const [firstname, setFirstname] = useState('')
+    const [secondname,setSecondname] = useState('')
+    const [active, setActive] = useState(false)
+    const [list, setList] = useState([])
+    const [checksend, setChecksend] = useState(false)
 
-    /////////////////////////////////////////////////////////////////////
+    useEffect(() => {
+        if (firstname) {
+            const newlist = messages.filter(mess =>
+                mess.user === `${firstname} ${secondname}` || mess.to === `${firstname} ${secondname}`
+            );
+            setList(newlist);
+        }
+    }, [messages, firstname, secondname]);
 
-    const [messinput, setMessInput] = useState('')
+    const sendMessage = () => {
+        if(firstname){
+            const userMess = {user: `${firstname} ${secondname}`, mess: message, to: false}
+            socket.emit('message', userMess);
+            setMessage('');
+        }
+
+    };
+
+    useEffect(() => {
+        const allMess = JSON.parse(localStorage.getItem('userMess')) || [];
+        setMessages(allMess);
+
+        socket.on('message', (message) => {
+            setMessages((prevMessages) => {
+                const newMessages = [...prevMessages, message];
+                localStorage.setItem('userMess', JSON.stringify(newMessages));
+                return newMessages;
+            });
+        });
+
+        return () => {
+            socket.off('message');
+        };
+    }, []);
 
 
 
+
+
+    // useEffect(()=>{
+    //     makeList()
+    // },[messages])
 
     return (
         <div className={style.main}>
+            <FirstEnter
+                firstname={firstname}
+                setFirstname={setFirstname}
+                secondname={secondname}
+                setSecondname={setSecondname}
+                setActive={setActive}
+
+                style={(active)?{display: 'none'}:{display: 'flex'}}
+            />
             <div className={style.header}>
                 <div className={style.logo}>graff.test </div>
+                <div>{firstname} {secondname}</div>
             </div>
             <div className={style.workpage}>
                 <div className={style.sliderpath}>
@@ -41,26 +82,15 @@ const Client = () => {
                 <div className={style.chatpath}>
                     <div className={style.chatpath_title}>Чат с поддержкой</div>
                     <div className={style.chatpath_listmess}>
-                        <MessLine /><MessLine /><MessLine /><MessLine /><MessLine /><MessLine /><MessLine /><MessLine /><MessLine /><MessLine /><MessLine /><MessLine /><MessLine /><MessLine /><MessLine /><MessLine /><MessLine /><MessLine /><MessLine /><MessLine /><MessLine /><MessLine /><MessLine />
+                        {list.map((mess, index)=>(
+                            <MessLine key={index} mess={mess} />
+                        ))}
+
                     </div>
-                    <FormMess messinput={messinput} setMessInput={setMessInput} />
+                    <FormMess  message={message} setMessage={setMessage} sendMessage={sendMessage} />
                 </div>
 
             </div>
-            {/*<h1>Client Page</h1>*/}
-            {/*<div>*/}
-            {/*    <input*/}
-            {/*        type="text"*/}
-            {/*        value={message}*/}
-            {/*        onChange={(e) => setMessage(e.target.value)}*/}
-            {/*    />*/}
-            {/*    <button onClick={sendMessage}>Send</button>*/}
-            {/*</div>*/}
-            {/*<div>*/}
-            {/*    {messages.map((msg, index) => (*/}
-            {/*        <div key={index}>{msg}</div>*/}
-            {/*    ))}*/}
-            {/*</div>*/}
         </div>
     );
 };

@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import style from './FormStyle.module.scss'
 
-const FormMess = ({messinput, setMessInput}) => {
+const FormMess = ({message, setMessage, sendMessage}) => {
 
     return (
         <div className={style.chatpath_form}>
             <input
                 type='text'
                 className={style.chatpath_form_input}
+                value={message}
                 placeholder='Написать сообщение...'
-                onChange={(e)=>setMessInput(e.target.value)}
+                onChange={(e)=>setMessage(e.target.value)}
             />
             <div
                 className={style.chatpath_form_send}
-                style={(messinput !== '')?{backgroundImage: `url("/images/systems/send2.png")`}:{backgroundImage: `url("/images/systems/send.png")`}}
+                style={(message !== '')?{backgroundImage: `url("/images/systems/send2.png")`}:{backgroundImage: `url("/images/systems/send.png")`}}
+                onClick={sendMessage}
             ></div>
         </div>
     );

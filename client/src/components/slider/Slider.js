@@ -12,14 +12,12 @@ const Slider = () => {
     useEffect(() => {
         fetch(`${process.env.REACT_APP_API_BASE_URL}/api/images`)
             .then(response => {
-                console.log(response)
                 if (!response.ok) {
                     throw new Error('Network response was not ok ' + response.statusText);
                 }
                 return response.json();
             })
             .then(data => {
-                console.log('Fetched images:', data); // Лог для отладки
                 setImgslist(data.images); // Устанавливаем состояние с массивом изображений
             })
             .catch(error => console.error('Error fetching images:', error));

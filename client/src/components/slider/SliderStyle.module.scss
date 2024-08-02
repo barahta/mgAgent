@@ -45,8 +45,26 @@
     .btn:active{
       background-color: #B9D7FB;
     }
-    .buttons_left{
+    .upload{
+      width: 100px;
+      height: 100px;
+      border-radius: 12px;
+      background-image: url("./images/download.svg");
+      background-size: cover;
+      background-position: center center;
+      position: relative;
+      cursor: pointer;
+      transition: 0.2s;
+      input[type="file"] {
+        display: none;
+      }
     }
-    .buttons_right{}
+    .upload:hover{
+      background-image: url("./images/downloadhover.svg");
+      transition: 0.2s;
+    }
+    .upload:active{
+      background-image: url("./images/downloadactive.svg");
+    }
   }
 }

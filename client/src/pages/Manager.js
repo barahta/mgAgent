@@ -1,85 +1,89 @@
-import React, { useEffect, useState } from 'react';
-import io from 'socket.io-client';
+import React, {useEffect, useRef, useState} from 'react';
 import style from './Manager.module.scss'
 import FormMess from "../components/formmess/FormMess";
 import MessLine from "../components/message/MessLine";
 import '../assets/styles/index.scss'
-import Slider from "../components/slider/Slider";
 import Persona from "../components/chats/Persona";
-const socket = io('http://localhost:5000');
+import socket from '../socket';
 
 const Manager = () => {
-    const [message, setMessage] = useState('');
-    const [messages, setMessages] = useState([]);
-    const [allChats, setAllChats] = useState([]);
-    const [thisChat, setThisChat] = useState(null);
-    const [list, setList] = useState([]);
+    const [message, setMessage] = useState('')
+    const [messages, setMessages] = useState([])
+    const [allChats, setAllChats] = useState([])
+    const [thisChat, setThisChat] = useState(null)
+    const [list, setList] = useState([])
+    const personalRef = useRef(null)
 
     const makeList = (currentChat, messages) => {
         if (currentChat) {
-            const searchChat = allChats.find(chat => chat.user === currentChat);
+            const searchChat = allChats.find(chat => chat.user === currentChat)
             if (searchChat) {
-                const newList = messages.filter(mess => mess.user === currentChat || mess.to === currentChat);
-                setList(newList);
+                const newList = messages.filter(mess => mess.user === currentChat || mess.to === currentChat)
+                setList(newList)
             }
         }
-    };
+    }
 
     const makeChats = (messages) => {
-        const authors = [];
-        const newAllChats = [];
+        const authors = []
+        const newAllChats = []
 
         messages.forEach(mess => {
             if (mess.user && !authors.includes(mess.user)) {
-                authors.push(mess.user);
-                newAllChats.push({ user: mess.user, chats: [] });
+                authors.push(mess.user)
+                newAllChats.push({ user: mess.user, chats: [] })
             }
-        });
+        })
 
         newAllChats.forEach(chat => {
             messages.forEach(mess => {
                 if (mess.user === chat.user || mess.to === chat.user) {
-                    chat.chats.push(mess);
+                    chat.chats.push(mess)
                 }
-            });
-        });
+            })
+        })
 
-        setAllChats(newAllChats);
-    };
+        setAllChats(newAllChats)
+    }
 
     const sendMessage = () => {
-        if (thisChat) {
-            const managerMess = { user: false, mess: message, to: thisChat };
-            socket.emit('message', managerMess);
-            setMessage('');
+        if (thisChat && message.length>0) {
+            const managerMess = { user: false, mess: message, to: thisChat }
+            socket.emit('message', managerMess)
+            setMessage('')
         }
-    };
+    }
 
     useEffect(() => {
-        const allMess = JSON.parse(localStorage.getItem('managerMess')) || [];
-        setMessages(allMess);
+        const allMess = JSON.parse(localStorage.getItem('managerMess')) || []
+        setMessages(allMess)
 
         socket.on('message', (message) => {
             setMessages((prevMessages) => {
-                const newMessages = [...prevMessages, message];
-                localStorage.setItem('managerMess', JSON.stringify(newMessages));
-                return newMessages;
+                const newMessages = [...prevMessages, message]
+                localStorage.setItem('managerMess', JSON.stringify(newMessages))
+                return newMessages
             });
         });
 
         return () => {
-            socket.off('message');
+            socket.off('message')
         };
-    }, []);
+    }, [])
 
     useEffect(() => {
-        makeChats(messages);
-    }, [messages]);
+        makeChats(messages)
+    }, [messages])
 
     useEffect(() => {
-        makeList(thisChat, messages);
-    }, [thisChat, messages]);
+        makeList(thisChat, messages)
+    }, [thisChat, messages])
 
+    useEffect(() => {
+        if (personalRef.current) {
+            personalRef.current.scrollTop = personalRef.current.scrollHeight
+        }
+    }, [list])
 
     return (
         <div className={style.main}>
@@ -98,7 +102,7 @@ const Manager = () => {
 
                 </div>
                 <div className={style.personal}>
-                    <div className={style.personalchat}>
+                    <div className={style.personalchat} ref={personalRef}>
                         {list.map((mess, index)=>(
                             <MessLine key={index} mess={mess}/>
                         ))}

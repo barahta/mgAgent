@@ -9,6 +9,28 @@
     width: 27px;
     height: 24px;
     position: relative;
+
+    .cloud{
+      position: absolute;
+      bottom: 0px;
+      right: 0px;
+      width: 7px;
+      height: 12px;
+      background-color: #F1F3F5;
+      margin-top: -40px;
+      .cloud_main{
+        width: 7px;
+        height: 12px;
+        background-color: #B9D7FB;
+      }
+      .cloud_corner{
+        width: 7px;
+        height: 12px;
+        background-color: inherit; /* Наследуем фон от родительского элемента */
+        clip-path: inset(0px round 0 0 100% 0);
+        margin-top: -12px;
+      }
+    }
     .sphere{
       position: absolute;
       width: 24px;
@@ -22,29 +44,6 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      z-index: 1;
-    }
-    .cloud{
-      position: absolute;
-      bottom: 0px;
-      right: 0px;
-      width: 7px;
-      height: 12px;
-      background-color: #F1F3F5;
-      margin-top: -40px;
-      z-index: 0;
-      .cloud_main{
-        width: 7px;
-        height: 12px;
-        background-color: #B9D7FB;
-      }
-      .cloud_corner{
-        width: 7px;
-        height: 12px;
-        background-color: inherit; /* Наследуем фон от родительского элемента */
-        clip-path: inset(0px round 0 0 100% 0);
-        margin-top: -12px;
-      }
     }
   }
   .line_right{

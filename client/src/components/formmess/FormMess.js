@@ -14,7 +14,7 @@ const FormMess = ({message, setMessage, sendMessage}) => {
             />
             <div
                 className={style.chatpath_form_send}
-                style={(message !== '')?{backgroundImage: `url("/images/systems/send2.png")`}:{backgroundImage: `url("/images/systems/send.png")`}}
+                style={(message !== '')?{backgroundImage: `url("/images/systems/send2.png")`, cursor: 'pointer'}:{backgroundImage: `url("/images/systems/send.png")`}}
                 onClick={sendMessage}
             ></div>
         </div>

@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import io from 'socket.io-client';
+import React, {useEffect, useRef, useState} from 'react';
 import style from './Client.module.scss'
 import FormMess from "../components/formmess/FormMess";
 import MessLine from "../components/message/MessLine";
 import '../assets/styles/index.scss'
 import Slider from "../components/slider/Slider";
 import FirstEnter from "../components/firstenter/FirstEnter";
-const socket = io('http://localhost:5000');
+import socket from '../socket';
 
 const Client = () => {
     const [message, setMessage] = useState('');
@@ -16,18 +15,23 @@ const Client = () => {
     const [active, setActive] = useState(false)
     const [list, setList] = useState([])
     const [checksend, setChecksend] = useState(false)
+    const listmessReg = useRef(null)
 
-    useEffect(() => {
+    const makeList = () => {
         if (firstname) {
             const newlist = messages.filter(mess =>
                 mess.user === `${firstname} ${secondname}` || mess.to === `${firstname} ${secondname}`
             );
             setList(newlist);
         }
+    }
+
+    useEffect(() => {
+        makeList()
     }, [messages, firstname, secondname]);
 
     const sendMessage = () => {
-        if(firstname){
+        if(firstname && message.length>0){
             const userMess = {user: `${firstname} ${secondname}`, mess: message, to: false}
             socket.emit('message', userMess);
             setMessage('');
@@ -52,13 +56,11 @@ const Client = () => {
         };
     }, []);
 
-
-
-
-
-    // useEffect(()=>{
-    //     makeList()
-    // },[messages])
+    useEffect(() => {
+        if (listmessReg.current) {
+            listmessReg.current.scrollTop = listmessReg.current.scrollHeight
+        }
+    }, [list])
 
     return (
         <div className={style.main}>
@@ -81,7 +83,7 @@ const Client = () => {
                 </div>
                 <div className={style.chatpath}>
                     <div className={style.chatpath_title}>Чат с поддержкой</div>
-                    <div className={style.chatpath_listmess}>
+                    <div className={style.chatpath_listmess} ref={listmessReg}>
                         {list.map((mess, index)=>(
                             <MessLine key={index} mess={mess} />
                         ))}

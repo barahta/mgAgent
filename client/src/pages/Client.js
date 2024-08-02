@@ -14,14 +14,13 @@ const Client = () => {
     const [secondname,setSecondname] = useState('')
     const [active, setActive] = useState(false)
     const [list, setList] = useState([])
-    const [checksend, setChecksend] = useState(false)
     const listmessReg = useRef(null)
 
     const makeList = () => {
         if (firstname) {
-            const newlist = messages.filter(mess =>
+            let newlist = messages.filter(mess =>
                 mess.user === `${firstname} ${secondname}` || mess.to === `${firstname} ${secondname}`
-            );
+            )
             setList(newlist);
         }
     }
@@ -33,26 +32,26 @@ const Client = () => {
     const sendMessage = () => {
         if(firstname && message.length>0){
             const userMess = {user: `${firstname} ${secondname}`, mess: message, to: false}
-            socket.emit('message', userMess);
-            setMessage('');
+            socket.emit('message', userMess)
+            setMessage('')
         }
 
     };
 
     useEffect(() => {
         const allMess = JSON.parse(localStorage.getItem('userMess')) || [];
-        setMessages(allMess);
+        setMessages(allMess)
 
         socket.on('message', (message) => {
             setMessages((prevMessages) => {
-                const newMessages = [...prevMessages, message];
-                localStorage.setItem('userMess', JSON.stringify(newMessages));
-                return newMessages;
+                const newMessages = [...prevMessages, message]
+                localStorage.setItem('userMess', JSON.stringify(newMessages))
+                return newMessages
             });
         });
 
         return () => {
-            socket.off('message');
+            socket.off('message')
         };
     }, []);
 
@@ -61,6 +60,29 @@ const Client = () => {
             listmessReg.current.scrollTop = listmessReg.current.scrollHeight
         }
     }, [list])
+    const groupMessages = (messages) => {
+        const grouped = []
+        let currentGroup = []
+        let currentUser = ''
+
+        messages.forEach((message, index) => {
+            if (message.user !== currentUser) {
+                if (currentGroup.length > 0) {
+                    grouped.push(currentGroup)
+                }
+                currentGroup = []
+                currentUser = message.user
+            }
+            currentGroup.push(message)
+        })
+        if (currentGroup.length > 0) {
+            grouped.push(currentGroup)
+        }
+
+        return grouped
+    }
+
+    const groupedList = groupMessages(list)
 
     return (
         <div className={style.main}>
@@ -84,10 +106,21 @@ const Client = () => {
                 <div className={style.chatpath}>
                     <div className={style.chatpath_title}>Чат с поддержкой</div>
                     <div className={style.chatpath_listmess} ref={listmessReg}>
-                        {list.map((mess, index)=>(
-                            <MessLine key={index} mess={mess} />
+                        {groupedList.map((group, groupIndex) => (
+                            group.map((mess, index) => {
+                                const isFirst = index === 0;
+                                const isLast = index === group.length - 1;
+                                return (
+                                    <MessLine
+                                        key={index}
+                                        mess={mess}
+                                        index={index}
+                                        isFirst={isFirst}
+                                        isLast={isLast}
+                                    />
+                                );
+                            })
                         ))}
-
                     </div>
                     <FormMess  message={message} setMessage={setMessage} sendMessage={sendMessage} />
                 </div>

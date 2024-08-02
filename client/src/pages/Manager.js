@@ -85,6 +85,30 @@ const Manager = () => {
         }
     }, [list])
 
+    const groupMessages = (messages) => {
+        const grouped = []
+        let currentGroup = []
+        let currentUser = ''
+
+        messages.forEach((message, index) => {
+            if (message.user !== currentUser) {
+                if (currentGroup.length > 0) {
+                    grouped.push(currentGroup)
+                }
+                currentGroup = []
+                currentUser = message.user
+            }
+            currentGroup.push(message)
+        })
+        if (currentGroup.length > 0) {
+            grouped.push(currentGroup)
+        }
+
+        return grouped
+    }
+
+    const groupedList = groupMessages(list)
+
     return (
         <div className={style.main}>
             <div className={style.header}>
@@ -103,10 +127,21 @@ const Manager = () => {
                 </div>
                 <div className={style.personal}>
                     <div className={style.personalchat} ref={personalRef}>
-                        {list.map((mess, index)=>(
-                            <MessLine key={index} mess={mess}/>
+                        {groupedList.map((group, groupIndex) => (
+                            group.map((mess, index) => {
+                                const isFirst = index === 0;
+                                const isLast = index === group.length - 1;
+                                return (
+                                    <MessLine
+                                        key={index}
+                                        mess={mess}
+                                        index={index}
+                                        isFirst={isFirst}
+                                        isLast={isLast}
+                                    />
+                                );
+                            })
                         ))}
-
                     </div>
                     <FormMess message={message} setMessage={setMessage} sendMessage={sendMessage}/>
                 </div>

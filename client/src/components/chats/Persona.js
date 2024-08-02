@@ -18,7 +18,7 @@ const Persona = ({chat, setThisChat, thisChat}) => {
 
     return (
         <div className={style.personablock} onClick={()=>setThisChat(chat.user)} style={(thisChat === chat.user)?{backgroundColor: '#B9D7FB'}:{}}>
-            <div className={style.sphere}>{chat.user.split(' ')[0][0]}{chat.user.split(' ')[1][0]}</div>
+            <div className={style.sphere}>{(chat.user)&&chat.user.split(' ')[0][0]}{(chat.user)&&chat.user.split(' ')[1][0]}</div>
             <div className={style.content}>
                 <div className={style.name}>{chat.user}</div>
                 <div className={style.lastmess}>{cutWidth(chat.chats[chat.chats.length - 1].mess)}</div>

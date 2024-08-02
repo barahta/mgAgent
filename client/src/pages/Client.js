@@ -105,22 +105,25 @@ const Client = () => {
                 </div>
                 <div className={style.chatpath}>
                     <div className={style.chatpath_title}>Чат с поддержкой</div>
-                    <div className={style.chatpath_listmess} ref={listmessReg}>
-                        {groupedList.map((group, groupIndex) => (
-                            group.map((mess, index) => {
-                                const isFirst = index === 0;
-                                const isLast = index === group.length - 1;
-                                return (
-                                    <MessLine
-                                        key={index}
-                                        mess={mess}
-                                        index={index}
-                                        isFirst={isFirst}
-                                        isLast={isLast}
-                                    />
-                                );
-                            })
-                        ))}
+
+                    <div className={style.chatpath_list}>
+                        <div className={style.chatpath_listmess} ref={listmessReg}>
+                            {groupedList.map((group, groupIndex) => (
+                                group.map((mess, index) => {
+                                    const isFirst = index === 0;
+                                    const isLast = index === group.length - 1;
+                                    return (
+                                        <MessLine
+                                            key={index}
+                                            mess={mess}
+                                            index={index}
+                                            isFirst={isFirst}
+                                            isLast={isLast}
+                                        />
+                                    );
+                                })
+                            ))}
+                        </div>
                     </div>
                     <FormMess  message={message} setMessage={setMessage} sendMessage={sendMessage} />
                 </div>

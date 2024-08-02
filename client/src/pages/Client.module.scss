@@ -42,14 +42,22 @@
         font-size: 20px;
         font-weight: 600;
       }
-      .chatpath_listmess{
+      .chatpath_list{
         width: 100%;
         height: calc(100% - 56px - 48px - 24px);
         display: flex;
         flex-direction: column;
+        justify-content: flex-end;
         align-items: center;
-        padding: 12px 0;
-        overflow-y: auto;
+        .chatpath_listmess{
+          width: 100%;
+          max-height: 100%;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          padding: 12px 0;
+          overflow-y: auto;
+        }
       }
 
     }

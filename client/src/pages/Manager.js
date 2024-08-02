@@ -126,6 +126,7 @@ const Manager = () => {
 
                 </div>
                 <div className={style.personal}>
+                    <div className={style.chatpath_list}>
                     <div className={style.personalchat} ref={personalRef}>
                         {groupedList.map((group, groupIndex) => (
                             group.map((mess, index) => {
@@ -143,6 +144,8 @@ const Manager = () => {
                             })
                         ))}
                     </div>
+                    </div>
+
                     <FormMess message={message} setMessage={setMessage} sendMessage={sendMessage}/>
                 </div>
             </div>
